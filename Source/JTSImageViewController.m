@@ -32,9 +32,9 @@ CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius = 2.0f;
 // Private Constants
 static CGFloat const JTSImageViewController_MinimumBackgroundScaling = 0.94f;
 static CGFloat const JTSImageViewController_TargetZoomForDoubleTap = 3.0f;
-static CGFloat const JTSImageViewController_MaxScalingForExpandingOffscreenStyleTransition = 1.25f;
-static CGFloat const JTSImageViewController_TransitionAnimationDuration = 0.3f;
-static CGFloat const JTSImageViewController_MinimumFlickDismissalVelocity = 800.0f;
+static CGFloat const JTSImageViewController_MaxScalingForExpandingOffscreenStyleTransition = 1.0f; //robert
+static CGFloat const JTSImageViewController_TransitionAnimationDuration = 0.3; //robert
+static CGFloat const JTSImageViewController_MinimumFlickDismissalVelocity = 0;  //robert
 
 typedef struct {
     BOOL statusBarHiddenPriorToPresentation;
@@ -478,7 +478,7 @@ UIGestureRecognizerDelegate
     self.progressView.center = CGPointMake(64.0f, 64.0f);
     self.progressView.alpha = 0;
     [self.progressContainer addSubview:self.progressView];
-    //    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.spinner = [[DGActivityIndicatorView alloc] initWithType:DGActivityIndicatorAnimationTypeTriplePulse tintColor:[UIColor whiteColor] size:50.0f];
     self.spinner.center = CGPointMake(64.0f, 64.0f);
     [self.spinner startAnimating];
@@ -1731,7 +1731,9 @@ UIGestureRecognizerDelegate
     else {
         if (vectorDistance > JTSImageViewController_MinimumFlickDismissalVelocity) {
             if (_flags.isDraggingImage) {
-                [self dismissImageWithFlick:velocity];
+                //                [self dismissImageWithFlick:velocity];
+                [self dismiss:YES];//robert
+                
             } else {
                 [self dismiss:YES];
             }
