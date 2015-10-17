@@ -11,6 +11,7 @@
 #import "JTSSimpleImageDownloader.h"
 #import "UIImage+JTSImageEffects.h"
 #import "UIApplication+JTSImageViewController.h"
+#import "DGActivityIndicatorView.h"
 
 CG_INLINE CGFLOAT_TYPE JTSImageFloatAbs(CGFLOAT_TYPE aFloat) {
 #if CGFLOAT_IS_DOUBLE
@@ -69,10 +70,10 @@ typedef struct {
 
 @interface JTSImageViewController ()
 <
-    UIScrollViewDelegate,
-    UITextViewDelegate,
-    UIViewControllerTransitioningDelegate,
-    UIGestureRecognizerDelegate
+UIScrollViewDelegate,
+UITextViewDelegate,
+UIViewControllerTransitioningDelegate,
+UIGestureRecognizerDelegate
 >
 
 // General Info
@@ -98,7 +99,7 @@ typedef struct {
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UITextView *textView;
 @property (strong, nonatomic) UIProgressView *progressView;
-@property (strong, nonatomic) UIActivityIndicatorView *spinner;
+@property (strong, nonatomic) DGActivityIndicatorView *spinner;
 
 // Gesture Recognizers
 @property (strong, nonatomic) UITapGestureRecognizer *singleTapperPhoto;
@@ -352,12 +353,12 @@ typedef struct {
     }
     /*
      viewWillTransitionToSize:withTransitionCoordinator: is not called when rotating from
-     one landscape orientation to the other (or from one portrait orientation to another). 
-     This makes it difficult to preserve the desired behavior of JTSImageViewController. 
-     We want the background snapshot to maintain the illusion that it never rotates. The 
-     only other way to ensure that the background snapshot stays in the correct orientation 
+     one landscape orientation to the other (or from one portrait orientation to another).
+     This makes it difficult to preserve the desired behavior of JTSImageViewController.
+     We want the background snapshot to maintain the illusion that it never rotates. The
+     only other way to ensure that the background snapshot stays in the correct orientation
      is to listen for this notification and respond when we've detected a landscape-to-landscape rotation.
-    */
+     */
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     BOOL landscapeToLandscape = UIDeviceOrientationIsLandscape(deviceOrientation) && UIInterfaceOrientationIsLandscape(self.lastUsedOrientation);
     BOOL portraitToPortrait = UIDeviceOrientationIsPortrait(deviceOrientation) && UIInterfaceOrientationIsPortrait(self.lastUsedOrientation);
@@ -477,7 +478,8 @@ typedef struct {
     self.progressView.center = CGPointMake(64.0f, 64.0f);
     self.progressView.alpha = 0;
     [self.progressContainer addSubview:self.progressView];
-    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    //    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.spinner = [[DGActivityIndicatorView alloc] initWithType:DGActivityIndicatorAnimationTypeTriplePulse tintColor:[UIColor whiteColor] size:50.0f];
     self.spinner.center = CGPointMake(64.0f, 64.0f);
     [self.spinner startAnimating];
     [self.progressContainer addSubview:self.spinner];
