@@ -26,14 +26,14 @@ CG_INLINE CGFLOAT_TYPE JTSImageFloatAbs(CGFLOAT_TYPE aFloat) {
 ///--------------------------------------------------------------------------------------------------------------------
 
 // Public Constants
-CGFloat const JTSImageViewController_DefaultAlphaForBackgroundDimmingOverlay = 0.66f;
+CGFloat const JTSImageViewController_DefaultAlphaForBackgroundDimmingOverlay = 1;
 CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius = 2.0f;
 
 // Private Constants
 static CGFloat const JTSImageViewController_MinimumBackgroundScaling = 0.94f;
 static CGFloat const JTSImageViewController_TargetZoomForDoubleTap = 3.0f;
 static CGFloat const JTSImageViewController_MaxScalingForExpandingOffscreenStyleTransition = 1.0f; //robert
-static CGFloat const JTSImageViewController_TransitionAnimationDuration = 0.3; //robert
+static CGFloat const JTSImageViewController_TransitionAnimationDuration = .3; //robert
 static CGFloat const JTSImageViewController_MinimumFlickDismissalVelocity = 0;  //robert
 
 typedef struct {
@@ -478,7 +478,7 @@ UIGestureRecognizerDelegate
     self.progressView.center = CGPointMake(64.0f, 64.0f);
     self.progressView.alpha = 0;
     [self.progressContainer addSubview:self.progressView];
-//    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    //    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.spinner = [[DGActivityIndicatorView alloc] initWithType:DGActivityIndicatorAnimationTypeTriplePulse tintColor:[UIColor whiteColor] size:50.0f];
     self.spinner.center = CGPointMake(64.0f, 64.0f);
     [self.spinner startAnimating];
@@ -767,7 +767,9 @@ UIGestureRecognizerDelegate
     CGRect referenceFrameInWindow = [self.imageInfo.referenceView convertRect:self.imageInfo.referenceRect toView:nil];
     _startingInfo.startingReferenceFrameForThumbnailInPresentingViewControllersOriginalOrientation = [self.view convertRect:referenceFrameInWindow fromView:nil];
     
+    self.imageView.alpha = 0.0;
     [self.scrollView addSubview:self.imageView];
+    
     
     [viewController presentViewController:self animated:NO completion:^{
         
@@ -798,7 +800,7 @@ UIGestureRecognizerDelegate
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [UIView
-             animateWithDuration:duration
+             animateWithDuration:duration  //robert
              delay:0
              options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
              animations:^{
@@ -839,7 +841,17 @@ UIGestureRecognizerDelegate
                      weakSelf.progressContainer.alpha = 1.0f;
                  }
                  
+                 [UIView
+                  animateWithDuration:0
+                  delay:duration/3      //robert
+                  options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
+                  animations:^{ self.imageView.alpha = 1.0f; } completion:^(BOOL finished) { }];
+                 
+                 
              } completion:^(BOOL finished) {
+                 
+                 
+                 
                  _flags.isTransitioningFromInitialModalToInteractiveState = NO;
                  _flags.isAnimatingAPresentationOrDismissal = NO;
                  weakSelf.view.userInteractionEnabled = YES;
@@ -1173,6 +1185,8 @@ UIGestureRecognizerDelegate
     if ([weakSelf.animationDelegate respondsToSelector:@selector(imageViewerWillBeginDismissal:withContainerView:)]) {
         [weakSelf.animationDelegate imageViewerWillBeginDismissal:weakSelf withContainerView:weakSelf.view];
     }
+    
+    duration += 0.2; //robert
     
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
         
@@ -1584,7 +1598,7 @@ UIGestureRecognizerDelegate
     }
     
     if (_flags.isAnimatingAPresentationOrDismissal == NO && _flags.isManuallyResizingTheScrollViewFrame == NO) {
-        [self updateDimmingViewForCurrentZoomScale:YES];
+        [self updateDimmingViewForCurrentZoomScale:NO];
     }
 }
 
