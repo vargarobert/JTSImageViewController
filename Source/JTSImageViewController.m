@@ -1710,7 +1710,10 @@ UIGestureRecognizerDelegate
         }
     }
 }
-
+//- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+//    CGPoint velocity = [panGestureRecognizer velocityInView:self.imageView];
+//    return fabs(velocity.y) > fabs(velocity.x);
+//}
 - (void)dismissingPanGestureRecognizerPanned:(UIPanGestureRecognizer *)panner {
     
     if (_flags.scrollViewIsAnimatingAZoom || _flags.isAnimatingAPresentationOrDismissal) {
@@ -1722,25 +1725,28 @@ UIGestureRecognizerDelegate
     CGPoint velocity = [panner velocityInView:panner.view];
     CGFloat vectorDistance = sqrtf(powf(velocity.x, 2)+powf(velocity.y, 2));
     
+    //    if(fabs(velocity.y) < fabs(velocity.x))
+    //        return;
+    
     if (panner.state == UIGestureRecognizerStateBegan) {
         _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
         if (_flags.isDraggingImage) {
-//            [self startImageDragging:locationInView translationOffset:UIOffsetZero];
+            //            [self startImageDragging:locationInView translationOffset:UIOffsetZero];
         }
     }
     else if (panner.state == UIGestureRecognizerStateChanged) {
-        if (_flags.isDraggingImage) {
-            CGPoint newAnchor = self.imageDragStartingPoint;
-            newAnchor.x += translation.x + self.imageDragOffsetFromActualTranslation.horizontal;
-            newAnchor.y += translation.y + self.imageDragOffsetFromActualTranslation.vertical;
-            self.attachmentBehavior.anchorPoint = newAnchor;
-        } else {
-            _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
-            if (_flags.isDraggingImage) {
-                UIOffset translationOffset = UIOffsetMake(-1*translation.x, -1*translation.y);
-                [self startImageDragging:locationInView translationOffset:translationOffset];
-            }
-        }
+        //        if (_flags.isDraggingImage) {
+        //            CGPoint newAnchor = self.imageDragStartingPoint;
+        //            newAnchor.x += translation.x + self.imageDragOffsetFromActualTranslation.horizontal;
+        //            newAnchor.y += translation.y + self.imageDragOffsetFromActualTranslation.vertical;
+        //            self.attachmentBehavior.anchorPoint = newAnchor;
+        //        } else {
+        //            _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
+        //            if (_flags.isDraggingImage) {
+        //                UIOffset translationOffset = UIOffsetMake(-1*translation.x, -1*translation.y);
+        //                [self startImageDragging:locationInView translationOffset:translationOffset];
+        //            }
+        //        }
     }
     else {
         if (vectorDistance > JTSImageViewController_MinimumFlickDismissalVelocity) {
