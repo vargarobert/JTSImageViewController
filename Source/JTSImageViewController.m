@@ -1725,7 +1725,7 @@ UIGestureRecognizerDelegate
     if (panner.state == UIGestureRecognizerStateBegan) {
         _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
         if (_flags.isDraggingImage) {
-            [self startImageDragging:locationInView translationOffset:UIOffsetZero];
+//            [self startImageDragging:locationInView translationOffset:UIOffsetZero];
         }
     }
     else if (panner.state == UIGestureRecognizerStateChanged) {
